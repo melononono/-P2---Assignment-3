@@ -1,0 +1,134 @@
+<html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.5/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.5/addons/p5.dom.js"></script>
+    <script src="../lib/p5.speech.js"></script>
+    <script>
+        //For the first sprint, I made a line drawing sprint with the speech library and the sound library. Users will be able to use the 4 set of instructions shown on the page to draw lines, the size of the line, the colour and queuing the music. While I was working on the code, I had many problems such as the colours not showing up or the lines not turning out how I wanted to look. For the line section, I realized it was just a simple mistake of not removing the stroke by using noStroke. The colours not showing up was a weird problem on my end with my Chrome brower, when I tested it out with another computer, it was working fine. 
+
+        var myRec = new p5.SpeechRec('en-US', parseResult); // new P5.SpeechRec object
+        myRec.continuous = true; // do continuous recognition
+        myRec.interimResults = true; // allow partial recognition (faster, less accurate)
+        var audio;
+        var x, y;
+        var dx, dy;
+        var size;
+
+        var r, b, g;
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            background(255, 255, 255);
+            fill(0, 0, 0, 255);
+            x = width / 2;
+            y = height / 2;
+            dx = 0;
+            dy = 0;
+
+            // instructions on screen
+            textSize(20);
+            textAlign(LEFT);
+            text("Draw: up, down, left, right, clear, stop", 20, 20);
+            text("Size: big, small, medium", 20, 50);
+            text("Colour: pink, red, orange, yellow, green, teal, blue, purple", 20, 80);
+            text("Music: play, end", 20, 110);
+            audio = createAudio('assets/song.mp3');
+
+            //myRec.onResult = parseResult; // now in the constructor
+            myRec.start(); // start engine
+        }
+
+        function draw() {
+            //setting the size of the line
+            ellipse(x, y, size, size);
+            fill(r, g, b);
+            noStroke();
+            x += dx;
+            y += dy;
+            if (x < 0) x = width;
+            if (y < 0) y = height;
+            if (x > width) x = 0;
+            if (y > height) y = 0;
+        }
+
+        function parseResult() {
+            //speech instructions and what each word does
+            var mostrecentword = myRec.resultString.split(' ').pop();
+            if (mostrecentword.indexOf("left") !== -1) {
+                dx = -1;
+                dy = 0;
+            } else if (mostrecentword.indexOf("right") !== -1) {
+                dx = 1;
+                dy = 0;
+            } else if (mostrecentword.indexOf("up") !== -1) {
+                dx = 0;
+                dy = -1;
+            } else if (mostrecentword.indexOf("down") !== -1) {
+                dx = 0;
+                dy = 1;
+            } else if (mostrecentword.indexOf("clear") !== -1) {
+                background(255);
+            } else if (mostrecentword.indexOf("stop") !== -1) {
+                dx = 0;
+                dy = 0;
+            } else if (mostrecentword.indexOf("big") !== -1) {
+                size = 35;
+            } else if (mostrecentword.indexOf("small") !== -1) {
+                size = 5;
+            } else if (mostrecentword.indexOf("medium") !== -1) {
+                size = 20;
+            } else if (mostrecentword.indexOf("pink") !== -1) {
+                r = 255;
+                g = 105;
+                b = 144;
+            } else if (mostrecentword.indexOf("red") !== -1) {
+                r = 255;
+                g = 53;
+                b = 53;
+            } else if (mostrecentword.indexOf("orange") !== -1) {
+                r = 255;
+                g = 129;
+                b = 24;
+            } else if (mostrecentword.indexOf("yellow") !== -1) {
+                r = 255;
+                g = 213;
+                b = 69;
+            } else if (mostrecentword.indexOf("green") !== -1) {
+                r = 100;
+                g = 185;
+                b = 57;
+            } else if (mostrecentword.indexOf("teal") !== -1) {
+                r = 40;
+                g = 255;
+                b = 174;
+            } else if (mostrecentword.indexOf("blue") !== -1) {
+                r = 40;
+                g = 148;
+                b = 255;
+            } else if (mostrecentword.indexOf("purple") !== -1) {
+                r = 177;
+                g = 40;
+                b = 255;
+
+            } else if (mostrecentword.indexOf("purple") !== -1) {
+                r = 177;
+                g = 40;
+                b = 255;
+            } else if (mostrecentword.indexOf("play") !== -1) {
+                audio.play();
+            } else if (mostrecentword.indexOf("end") !== -1) {
+                audio.stop();
+            }
+
+            //Shows the most recent word on the console log
+            console.log(mostrecentword);
+        }
+
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>
